@@ -8,6 +8,5 @@
         "base >= 2.0",
         "factorissimo-2-notnotmelon",
         "! space_age"
-    ],
-    "description": ""
+    ]
 }
