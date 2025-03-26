@@ -3,6 +3,8 @@ A port of the [Factorissimo2 Inception](https://mods.factorio.com/mod/Factorissi
 
 Start inside a [Factorissimo3](https://mods.factorio.com/mod/factorissimo-2-notnotmelon?from=search) factory, from which you cannot leave.
 
+To start a playthrough, please select the Liteception map generation preset.
+
 If you're not getting fluids through the pipes, remember to flip the Factorissimo input! This will be fixed as soon as I figure out how.
 
 ## Development
