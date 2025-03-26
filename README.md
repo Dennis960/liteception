@@ -1,5 +1,5 @@
 # Liteception
-A port of the [Factorissimo2 Inception](https://mods.factorio.com/mod/Factorissimo2-Playthrough) to Factorio 2.0.
+A port of [Factorissimo2 Inception](https://mods.factorio.com/mod/Factorissimo2-Playthrough) for Factorio 2.0.
 
 Start inside a [Factorissimo3](https://mods.factorio.com/mod/factorissimo-2-notnotmelon?from=search) factory, from which you cannot leave.
 
@@ -10,7 +10,7 @@ If you're not getting fluids through the pipes, remember to flip the Factorissim
 ## Development
 Contributions are welcome!
 
-The various instances of `-- TODO:` throughout the code should be the best place for additional work.
+The various instances of `-- TODO:` throughout the code should be the best place for additional work. This is my first Factorio modding project, so expect trivial mistakes.
 
 ### Space age?
 Space age offers several implementation options I haven't made up my mind about yet.

@@ -8,5 +8,6 @@
         "base >= 2.0",
         "factorissimo-2-notnotmelon",
         "! space_age"
-    ]
+    ],
+    "description": "Start the game inside a Factorissimo 3 factory, unable to leave! A port of Factorissimo2 Inception."
 }
