@@ -1,0 +1,1 @@
+require("prototype.technology.resources")
