@@ -1,13 +1,13 @@
 {
     "name": "liteception",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "title": "Liteception",
     "author": "iwVerve",
     "factorio_version": "2.0",
     "dependencies": [
         "base >= 2.0",
         "factorissimo-2-notnotmelon",
-        "! space_age"
+        "! space-age"
     ],
     "description": "Start the game inside a Factorissimo 3 factory, unable to leave! A port of Factorissimo2 Inception."
 }
