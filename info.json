@@ -1,6 +1,6 @@
 {
     "name": "liteception",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "title": "Liteception",
     "author": "iwVerve",
     "factorio_version": "2.0",
@@ -8,5 +8,6 @@
         "base >= 2.0",
         "factorissimo-2-notnotmelon",
         "! space_age"
-    ]
+    ],
+    "description": ""
 }
