@@ -14,9 +14,18 @@ local function get_position(is_indoor, name, direction, id, offset)
 
     local offsets = surface_position_data.offsets[direction]
 
+    local offset_x, offset_y
+    if direction == defines.direction.north or direction == defines.direction.south then
+        offset_x = offsets[id]
+        offset_y = 0
+    else
+        offset_x = 0
+        offset_y = offsets[id]
+    end
+
     return {
-        position[name][1] + offsets.x[id] + offset,
-        position[name][2] + offsets.y[id] + offset,
+        position[name][1] + offset_x + offset,
+        position[name][2] + offset_y + offset,
     }
 end
 
