@@ -8,6 +8,18 @@ local factory_input_data = require("static.factory_input_data")
 
 local inputs = {}
 
+local function get_position(is_indoor, name, direction, id, offset)
+    local surface_position_data = is_indoor and factory_input_data.indoor_pos or factory_input_data.outdoor_pos
+    local position = surface_position_data.positions[direction]
+
+    local offsets = surface_position_data.offsets[direction]
+
+    return {
+        position[name][1] + offsets.x[id] + offset,
+        position[name][2] + offsets.y[id] + offset,
+    }
+end
+
 function inputs.set_item_input(direction, id, input)
     local indoor_surface = game.get_surface(storage.factory.surface_name)
     local outdoor_surface = game.get_surface(storage.factory.placed_on_surface_name)
@@ -16,31 +28,10 @@ function inputs.set_item_input(direction, id, input)
     local entity_direction = direction + 8
     if entity_direction >= 16 then entity_direction = entity_direction - 16 end
 
-    local outdoor_pos = factory_input_data.outdoor_pos.positions[direction]
-    local indoor_pos = factory_input_data.indoor_pos.positions[direction]
-    local outdoor_offset = factory_input_data.outdoor_pos.offsets[direction]
-    local outdoor_offset_x = outdoor_offset.x[id]
-    local outdoor_offset_y = outdoor_offset.y[id]
-    local indoor_offset = factory_input_data.indoor_pos.offsets[direction]
-    local indoor_offset_x = indoor_offset.x[id]
-    local indoor_offset_y = indoor_offset.y[id]
-
-    local chest_position = {
-        outdoor_pos.chest[1] + outdoor_offset_x,
-        outdoor_pos.chest[2] + outdoor_offset_y,
-    }
-    local loader_position = {
-        outdoor_pos.loader[1] + outdoor_offset_x,
-        outdoor_pos.loader[2] + outdoor_offset_y,
-    }
-    local outdoor_belt_position = {
-        outdoor_pos.belt[1] + outdoor_offset_x,
-        outdoor_pos.belt[2] + outdoor_offset_y,
-    }
-    local indoor_belt_position = {
-        indoor_pos.belt[1] + indoor_offset_x,
-        indoor_pos.belt[2] + indoor_offset_y,
-    }
+    local chest_position = get_position(false, "chest", direction, id, 0)
+    local loader_position = get_position(false, "loader", direction, id, 0)
+    local outdoor_belt_position = get_position(false, "belt", direction, id, 0)
+    local indoor_belt_position = get_position(true, "belt", direction, id, 0)
 
     local infinity_chest = outdoor_surface.create_entity{
         name = "infinity-chest",
@@ -84,15 +75,7 @@ end
 function inputs.get_item_input(direction, id)
     local outdoor_surface = game.get_surface(storage.factory.placed_on_surface_name)
 
-    local outdoor_pos = factory_input_data.outdoor_pos.positions[direction]
-    local outdoor_offset = factory_input_data.outdoor_pos.offsets[direction]
-    local outdoor_offset_x = outdoor_offset.x[id]
-    local outdoor_offset_y = outdoor_offset.y[id]
-
-    local chest_position = {
-        outdoor_pos.chest[1] + outdoor_offset_x + 0.5,
-        outdoor_pos.chest[2] + outdoor_offset_y + 0.5,
-    }
+    local chest_position = get_position(false, "chest", direction, id, 0.5)
 
     local infinity_chest = outdoor_surface.find_entity("infinity-chest", chest_position)
 
@@ -116,23 +99,8 @@ function inputs.set_fluid_input(direction, id, input)
     local entity_direction = direction + 8
     if entity_direction >= 16 then entity_direction = entity_direction - 16 end
 
-    local outdoor_pos = factory_input_data.outdoor_pos.positions[direction]
-    local indoor_pos = factory_input_data.indoor_pos.positions[direction]
-    local outdoor_offset = factory_input_data.outdoor_pos.offsets[direction]
-    local outdoor_offset_x = outdoor_offset.x[id]
-    local outdoor_offset_y = outdoor_offset.y[id]
-    local indoor_offset = factory_input_data.indoor_pos.offsets[direction]
-    local indoor_offset_x = indoor_offset.x[id]
-    local indoor_offset_y = indoor_offset.y[id]
-
-    local infinity_pipe_position = {
-        outdoor_pos.infinity_pipe[1] + outdoor_offset_x,
-        outdoor_pos.infinity_pipe[2] + outdoor_offset_y,
-    }
-    local indoor_pipe_position = {
-        indoor_pos.pipe[1] + indoor_offset_x,
-        indoor_pos.pipe[2] + indoor_offset_y,
-    }
+    local infinity_pipe_position = get_position(false, "infinity_pipe", direction, id, 0)
+    local indoor_pipe_position = get_position(true, "pipe", direction, id, 0)
 
     local infinity_pipe_name = factory_input_data.infinity_pipes[direction]
 
@@ -172,31 +140,10 @@ function inputs.remove_input(direction, id)
     local indoor_surface = game.get_surface(storage.factory.surface_name)
     local outdoor_surface = game.get_surface(storage.factory.placed_on_surface_name)
 
-    local outdoor_pos = factory_input_data.outdoor_pos.positions[direction]
-    local indoor_pos = factory_input_data.indoor_pos.positions[direction]
-    local outdoor_offset = factory_input_data.outdoor_pos.offsets[direction]
-    local outdoor_offset_x = outdoor_offset.x[id]
-    local outdoor_offset_y = outdoor_offset.y[id]
-    local indoor_offset = factory_input_data.indoor_pos.offsets[direction]
-    local indoor_offset_x = indoor_offset.x[id]
-    local indoor_offset_y = indoor_offset.y[id]
-
-    local chest_position = {
-        outdoor_pos.chest[1] + outdoor_offset_x + 0.5,
-        outdoor_pos.chest[2] + outdoor_offset_y + 0.5,
-    }
-    local outdoor_belt_position = {
-        outdoor_pos.belt[1] + outdoor_offset_x + 0.5,
-        outdoor_pos.belt[2] + outdoor_offset_y + 0.5,
-    }
-    local indoor_belt_position = {
-        indoor_pos.belt[1] + indoor_offset_x + 0.5,
-        indoor_pos.belt[2] + indoor_offset_y + 0.5,
-    }
-    local indoor_pipe_position = {
-        indoor_pos.pipe[1] + indoor_offset_x + 0.5,
-        indoor_pos.pipe[2] + indoor_offset_y + 0.5,
-    }
+    local chest_position = get_position(false, "chest", direction, id, 0.5)
+    local outdoor_belt_position = get_position(false, "belt", direction, id, 0.5)
+    local indoor_belt_position = get_position(true, "belt", direction, id, 0.5)
+    local indoor_pipe_position = get_position(true, "pipe", direction, id, 0.5)
 
     local infinity_pipe_name = factory_input_data.infinity_pipes[direction]
 
