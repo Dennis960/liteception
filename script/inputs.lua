@@ -4,12 +4,15 @@
 
 ]]
 
-local factory_input_data = require("static.factory_input_data")
+-- TODO: Sometimes you get extra resources? No clue what triggers it.
+
+local common = require("static.common")
+local factory_data = require("static.factory_data.factory_data")
 
 local inputs = {}
 
 local function get_position(is_indoor, name, direction, id, offset)
-    local surface_position_data = is_indoor and factory_input_data.indoor_pos or factory_input_data.outdoor_pos
+    local surface_position_data = is_indoor and factory_data.indoor_pos or factory_data.outdoor_pos
     local position = surface_position_data.positions[direction]
 
     local offsets = surface_position_data.offsets[direction]
@@ -111,7 +114,7 @@ function inputs.set_fluid_input(direction, id, input)
     local infinity_pipe_position = get_position(false, "infinity_pipe", direction, id, 0)
     local indoor_pipe_position = get_position(true, "pipe", direction, id, 0)
 
-    local infinity_pipe_name = factory_input_data.infinity_pipes[direction]
+    local infinity_pipe_name = common.infinity_pipes[direction]
 
     local infinity_pipe = outdoor_surface.create_entity{
         name = infinity_pipe_name,
@@ -154,7 +157,7 @@ function inputs.remove_input(direction, id)
     local indoor_belt_position = get_position(true, "belt", direction, id, 0.5)
     local indoor_pipe_position = get_position(true, "pipe", direction, id, 0.5)
 
-    local infinity_pipe_name = factory_input_data.infinity_pipes[direction]
+    local infinity_pipe_name = common.infinity_pipes[direction]
 
     local outside = outdoor_surface.find_entities{ chest_position, outdoor_belt_position }
     if outside[1] == nil then
@@ -215,7 +218,7 @@ function inputs.add_factory_input(prototype)
 end
 
 local function replace_belts()
-    for _, direction in ipairs(factory_input_data.directions) do
+    for _, direction in ipairs(common.directions) do
         for id = 1, 8 do
             local item = inputs.get_item_input(direction, id)
             if item then

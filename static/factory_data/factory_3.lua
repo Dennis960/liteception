@@ -9,19 +9,32 @@ local east  = defines.direction.east
 local south = defines.direction.south
 local west  = defines.direction.west
 
-local lib = {
-    factory_position = { x = 10, y = 10 },
-    infinity_pipes = {
-        [north] = "vertical-infinity-pipe",
-        [east]  = "horizontal-infinity-pipe",
-        [south] = "vertical-infinity-pipe",
-        [west]  = "horizontal-infinity-pipe",
+local factory = {
+    entity_name = "factory-3",
+    entity_position = { x = 10, y = 10 },
+    player_spawn_position = { x = 0, y = 30 },
+    combinator_position = { x = 2, y = 31 },
+    tile_fills = {
+        {
+            tile = "factory-wall-3",
+            left = -2,
+            top = 30,
+            right = 1,
+            bottom = 30,
+        },
+        {
+            tile = "out-of-map",
+            left = -3,
+            top = 31,
+            right = 2,
+            bottom = 32,
+        },
     },
     gui_inputs = {
-        [north] = { 1, 2, 3, 4, 0, 5, 6, 7, 8, },
-        [east]  = { 1, 2, 3, 4, 0, 5, 6, 7, 8, },
-        [south] = { 1, 2, 3, 4, 0, 5, 6, 7, 8, },
-        [west]  = { 1, 2, 3, 4, 0, 5, 6, 7, 8, },
+        [north] = { 1, 2, 0, 3, 4, 0, 5, 6, 7, 8 },
+        [east]  = { 1, 2, 0, 3, 4, 0, 5, 6, 7, 8 },
+        [south] = { 1, 2, 0, 3, 4, 0, 5, 6, 7, 8 },
+        [west]  = { 1, 2, 0, 3, 4, 0, 5, 6, 7, 8 },
     },
     outdoor_pos = {
         offsets = {
@@ -83,7 +96,6 @@ local lib = {
             },
         },
     },
-    directions = { north, east, south, west },
 }
 
-return lib
+return factory

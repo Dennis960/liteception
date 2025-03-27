@@ -5,7 +5,7 @@
 
 ]]
 
-local factory_input_data = require("static.factory_input_data")
+local factory_data = require("static.factory_data.factory_data")
 
 local factory = {}
 
@@ -18,8 +18,8 @@ local function initialize()
 
     -- Create factory
     local factory_entity = outside_surface.create_entity{
-        name = "factory-3",
-        position = factory_input_data.factory_position,
+        name = factory_data.entity_name,
+        position = factory_data.entity_position,
         force = "player",
         raise_built = true,
     }
@@ -28,39 +28,14 @@ local function initialize()
     -- Block factory entrance
     local tiles = {}
 
-    local walls = {
-        name = "factory-wall-3",
-        left = -2,
-        right = 1,
-        y = 30,
-    }
-    local out_of_maps = {
-        name = "out-of-map",
-        left = -3,
-        top = 31,
-        right = 2,
-        bottom = 32,
-    }
-
-    for x = walls.left, walls.right do
-        table.insert(tiles, {
-            name = walls.name,
-            position = {
-                x = x,
-                y = walls.y
-            }
-        })
-    end
-
-    for y = out_of_maps.top, out_of_maps.bottom do
-        for x = out_of_maps.left, out_of_maps.right do
-            table.insert(tiles, {
-                name = out_of_maps.name,
-                position = {
-                    x = x,
-                    y = y
-                }
-            })
+    for _, tile_fill in ipairs(factory_data.tile_fills) do
+        for y = tile_fill.top, tile_fill.bottom do
+            for x = tile_fill.left, tile_fill.right do
+                table.insert(tiles, {
+                    name = tile_fill.tile,
+                    position = { x = x, y = y },
+                })
+            end
         end
     end
 
@@ -80,7 +55,7 @@ local function initialize()
     -- Create input combinator
     storage.combinator = factory_surface.create_entity{
         name = "factory-input-combinator",
-        position = { x = 2, y = 31 },
+        position = factory_data.combinator_position,
         force = "player",
     }
 
@@ -111,10 +86,7 @@ local function teleport_player(index)
     end
 
     player.teleport(
-        {
-            x = 0,
-            y = 30,
-        },
+        factory_data.player_spawn_position,
         factory.factory_surface_name
     )
 end

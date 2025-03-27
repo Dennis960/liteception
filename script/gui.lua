@@ -6,7 +6,7 @@
 
 local gui = {}
 
-local factory_input_data = require("static.factory_input_data")
+local factory_data = require("static.factory_data.factory_data")
 local inputs = require("script.inputs")
 
 local function create_buttons(player)
@@ -25,7 +25,7 @@ local function create_buttons(player)
         button.tags.direction = direction
         flow.clear()
 
-        local input_ids = factory_input_data.gui_inputs[direction]
+        local input_ids = factory_data.gui_inputs[direction]
         local dummy_id = 0
         for _, id in ipairs(input_ids) do
             if id == 0 then
