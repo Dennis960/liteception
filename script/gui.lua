@@ -15,8 +15,9 @@ local function create_buttons(player)
             table.insert(selector_filter, { filter = "name", name = item.name })
         end
     end
-    if selector_filter[1] == nil then
-        table.insert(selector_filter, { filter = "stack_size", comparison = "=", value = 100000 })
+    if #selector_filter == 0 then
+        -- Maybe a dirty hack
+        table.insert(selector_filter, { filter = "name", name = "__liteception-nothing__" })
     end
 
     local function populate_flow(flow, button, direction)
