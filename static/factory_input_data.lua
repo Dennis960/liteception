@@ -17,6 +17,12 @@ local lib = {
         [south] = "vertical-infinity-pipe",
         [west]  = "horizontal-infinity-pipe",
     },
+    gui_inputs = {
+        [north] = { 1, 2, 3, 4, 0, 5, 6, 7, 8, },
+        [east]  = { 1, 2, 3, 4, 0, 5, 6, 7, 8, },
+        [south] = { 1, 2, 3, 4, 0, 5, 6, 7, 8, },
+        [west]  = { 1, 2, 3, 4, 0, 5, 6, 7, 8, },
+    },
     outdoor_pos = {
         offsets = {
             [north] = { 0, 1, 2, 3, 8, 9, 10, 11 },

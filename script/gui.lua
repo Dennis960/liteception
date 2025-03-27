@@ -6,6 +6,7 @@
 
 local gui = {}
 
+local factory_input_data = require("static.factory_input_data")
 local inputs = require("script.inputs")
 
 local function create_buttons(player)
@@ -24,15 +25,18 @@ local function create_buttons(player)
         button.tags.direction = direction
         flow.clear()
 
-        for i = 1,8 do
-            button.tags.num = i
-            local itemname = storage.selected[button.tags.direction][button.tags.num]
-            button.item = itemname
-            flow.add(button)
-            button.item = nil
-
-            if i == 4 then
-                flow.add { type = "sprite", name = "dummy-buttons-button", sprite = "tile/lab-dark-2" }
+        local input_ids = factory_input_data.gui_inputs[direction]
+        local dummy_id = 0
+        for _, id in ipairs(input_ids) do
+            if id == 0 then
+                flow.add { type = "sprite", name = "dummy-buttons-button-" .. dummy_id, sprite = "tile/lab-dark-2" }
+                dummy_id = dummy_id + 1
+            else
+                button.tags.num = id
+                local item_name = storage.selected[button.tags.direction][button.tags.num]
+                button.item = item_name
+                flow.add(button)
+                button.item = nil
             end
         end
     end
@@ -45,9 +49,10 @@ local function create_buttons(player)
         elem_filters = selector_filter,
     }
 
-    local top_content    = player.opened.content_frame["top-content"]
-    local middle_content = player.opened.content_frame["middle-content"]
-    local bottom_content = player.opened.content_frame["bottom-content"]
+    local content_frame = player.opened.content_frame
+    local top_content    = content_frame["top-content"]
+    local middle_content = content_frame["middle-content"]
+    local bottom_content = content_frame["bottom-content"]
 
     populate_flow(top_content.children[1],    button, defines.direction.north)
     populate_flow(middle_content.children[1], button, defines.direction.west)
