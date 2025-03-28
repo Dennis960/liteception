@@ -223,7 +223,7 @@ local function replace_belts()
                 local item = inputs.get_item_input(direction, id)
                 if item then
                     inputs.remove_input(direction, id)
-                    inputs.set_item_input(direction, id, item)
+                    inputs.set_input(direction, id, item)
                 end
             end
         end
