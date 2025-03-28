@@ -1,8 +1,9 @@
 ---------------------------------------------------------------------------------------------------
-Version: 0.1.3
-Date: 27. 03. 2025
+Version: 0.2.0
+Date: 28. 03. 2025
   Features:
     - Added a mod setting to start the game in a smaller factory.
+    - Added a mod setting to start the game without some Factorissimo factory technologies.
 ---------------------------------------------------------------------------------------------------
 Version: 0.1.2
 Date: 27. 03. 2025

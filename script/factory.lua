@@ -62,14 +62,27 @@ local function initialize()
 
     -- Research factory technologies
     local starting_technologies = {
-        "factory-architecture-t1",
-        "factory-architecture-t2",
-        "factory-architecture-t3",
         "factory-connection-type-fluid",
         "factory-interior-upgrade-lights",
         "factory-recursion-t1",
         "factory-recursion-t2",
     }
+
+    local factory_tiers = {
+        "factory-architecture-t1",
+        "factory-architecture-t2",
+        "factory-architecture-t3",
+    }
+    local setting_tiers = {
+        ["none"] = 0,
+        ["factory-1"] = 1,
+        ["factory-2"] = 2,
+        ["factory-3"] = 3,
+    }
+    local to_research = setting_tiers[settings.global["liteception-factory-research"].value]
+    for i = 1, to_research do
+        table.insert(starting_technologies, factory_tiers[i])
+    end
 
     for _, force in pairs(game.forces) do
         for _, technology in ipairs(starting_technologies) do
