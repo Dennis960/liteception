@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.2.1
+Date: 28. 03. 2025
+  Bugfixes:
+    - Fixed crash when every single belt has a researchable recipe.
+    - Fixed crash when upgrading input belts.
+---------------------------------------------------------------------------------------------------
 Version: 0.2.0
 Date: 28. 03. 2025
   Features:

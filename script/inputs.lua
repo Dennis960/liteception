@@ -218,11 +218,13 @@ end
 
 local function replace_belts()
     for _, direction in ipairs(common.directions) do
-        for id = 1, 8 do
-            local item = inputs.get_item_input(direction, id)
-            if item then
-                inputs.remove_input(direction, id)
-                inputs.set_item_input(direction, id, item)
+        for _, id in ipairs(storage.factory_data.gui_inputs[direction]) do
+            if id ~= 0 then
+                local item = inputs.get_item_input(direction, id)
+                if item then
+                    inputs.remove_input(direction, id)
+                    inputs.set_item_input(direction, id, item)
+                end
             end
         end
     end
