@@ -5,7 +5,7 @@
 
 ]]
 
-local factory_data = require("static.factory_data.factory_data")
+local all_factory_data = require("static.all_factory_data")
 
 local factory = {}
 
@@ -18,8 +18,8 @@ local function initialize()
 
     -- Create factory
     local factory_entity = outside_surface.create_entity{
-        name = factory_data.entity_name,
-        position = factory_data.entity_position,
+        name = storage.factory_data.entity_name,
+        position = storage.factory_data.entity_position,
         force = "player",
         raise_built = true,
     }
@@ -28,7 +28,7 @@ local function initialize()
     -- Block factory entrance
     local tiles = {}
 
-    for _, tile_fill in ipairs(factory_data.tile_fills) do
+    for _, tile_fill in ipairs(storage.factory_data.tile_fills) do
         for y = tile_fill.top, tile_fill.bottom do
             for x = tile_fill.left, tile_fill.right do
                 table.insert(tiles, {
@@ -55,7 +55,7 @@ local function initialize()
     -- Create input combinator
     storage.combinator = factory_surface.create_entity{
         name = "factory-input-combinator",
-        position = factory_data.combinator_position,
+        position = storage.factory_data.combinator_position,
         force = "player",
     }
 
@@ -86,12 +86,15 @@ local function teleport_player(index)
     end
 
     player.teleport(
-        factory_data.player_spawn_position,
+        storage.factory_data.player_spawn_position,
         factory.factory_surface_name
     )
 end
 
 local function on_init()
+    storage.factory_type = settings.global["liteception-factory-type"].value
+    storage.factory_data = all_factory_data[storage.factory_type]
+
     if remote.interfaces["freeplay"] then
         remote.call("freeplay", "set_skip_intro", true)
         remote.call("freeplay", "set_disable_crashsite", true)
@@ -119,6 +122,7 @@ end
 
 factory.lib = {
     on_init = on_init,
+    on_load = on_load,
     events = {
         [defines.events.on_player_created] = on_player_created,
         [defines.events.on_player_respawned] = on_player_respawned,

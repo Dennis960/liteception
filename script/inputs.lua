@@ -7,12 +7,11 @@
 -- TODO: Sometimes you get extra resources? No clue what triggers it.
 
 local common = require("static.common")
-local factory_data = require("static.factory_data.factory_data")
 
 local inputs = {}
 
 local function get_position(is_indoor, name, direction, id, offset)
-    local surface_position_data = is_indoor and factory_data.indoor_pos or factory_data.outdoor_pos
+    local surface_position_data = is_indoor and storage.factory_data.indoor_pos or storage.factory_data.outdoor_pos
     local position = surface_position_data.positions[direction]
 
     local offsets = surface_position_data.offsets[direction]
