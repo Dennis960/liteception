@@ -106,7 +106,7 @@ end
 
 local function on_init()
     storage.factory_type = settings.global["liteception-factory-type"].value
-    storage.factory_data = all_factory_data[storage.factory_type]
+    storage.factory_data = all_factory_data.factories[storage.factory_type]
 
     if remote.interfaces["freeplay"] then
         remote.call("freeplay", "set_skip_intro", true)

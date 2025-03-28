@@ -6,7 +6,7 @@
 
 -- TODO: Sometimes you get extra resources? No clue what triggers it.
 
-local common = require("static.common")
+local all_factory_data = require("static.all_factory_data")
 local liteception_util = require("script.liteception_util")
 
 local inputs = {}
@@ -114,7 +114,7 @@ function inputs.set_fluid_input(direction, id, input)
     local infinity_pipe_position = get_position(false, "infinity_pipe", direction, id, 0)
     local indoor_pipe_position = get_position(true, "pipe", direction, id, 0)
 
-    local infinity_pipe_name = common.infinity_pipes[direction]
+    local infinity_pipe_name = all_factory_data.infinity_pipes[direction]
 
     local infinity_pipe = outdoor_surface.create_entity{
         name = infinity_pipe_name,
@@ -157,7 +157,7 @@ function inputs.remove_input(direction, id)
     local indoor_belt_position = get_position(true, "belt", direction, id, 0.5)
     local indoor_pipe_position = get_position(true, "pipe", direction, id, 0.5)
 
-    local infinity_pipe_name = common.infinity_pipes[direction]
+    local infinity_pipe_name = all_factory_data.infinity_pipes[direction]
 
     local outside = outdoor_surface.find_entities{ chest_position, outdoor_belt_position }
     if outside[1] == nil then
@@ -218,7 +218,7 @@ function inputs.add_factory_input(prototype)
 end
 
 local function replace_belts()
-    for _, direction in ipairs(common.directions) do
+    for _, direction in ipairs(all_factory_data.directions) do
         for _, id in ipairs(storage.factory_data.gui_inputs[direction]) do
             if id ~= 0 then
                 local item = inputs.get_item_input(direction, id)
