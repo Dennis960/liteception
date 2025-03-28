@@ -7,6 +7,7 @@
 -- TODO: Sometimes you get extra resources? No clue what triggers it.
 
 local common = require("static.common")
+local liteception_util = require("script.liteception_util")
 
 local inputs = {}
 
@@ -247,22 +248,8 @@ local function on_init()
         inputs.add_factory_input(prototype)
     end
 
-    -- Find the slowest belt to use as input connection.
-    local slowest_belt_name = nil
-    local slowest_belt_speed = nil
-    for _, prototype in pairs(prototypes.get_entity_filtered{{ filter = "type", type = "transport-belt" }}) do
-        if prototype.type == "transport-belt" then
-            if slowest_belt_name == nil then
-                slowest_belt_name = prototype.name
-                slowest_belt_speed = prototype.belt_speed
-            else
-                if prototype.belt_speed < slowest_belt_speed then
-                    slowest_belt_name = prototype.name
-                    slowest_belt_speed = prototype.belt_speed
-                end
-            end
-        end
-    end
+    local belts = prototypes.get_entity_filtered{{ filter = "type", type = "transport-belt" }}
+    local slowest_belt_name = liteception_util.get_slowest_craftable_belt_name(belts, prototypes.recipe, true)
 
     -- Trim "-transport-belt" off the belt name.
     local trimmed_belt_name = slowest_belt_name:sub(1, -16)

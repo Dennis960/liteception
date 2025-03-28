@@ -4,33 +4,17 @@
 
 ]]
 
+local liteception_util = require("script.liteception_util")
+
 
 -- Make a map of all belts
 local belt_names = {}
 for _, belt in pairs(data.raw["transport-belt"]) do
-    belt_names[belt.name] = true
+    belt_names[belt.name] = belt
 end
 
 
--- Find the slowest of all the belts available at the start
-local starting_belt_name = nil
-local starting_belt_speed = nil
-for _, recipe in pairs(data.raw["recipe"]) do
-    if recipe.enabled == nil or recipe.enabled then
-        if recipe.results then
-            for _, result in pairs(recipe.results) do
-                if belt_names[result.name] then
-                    -- Found a belt available at the start. Check if it's the slowest one
-                    local belt = data.raw["transport-belt"][result.name]
-                    if starting_belt_name == nil or belt.speed < starting_belt_speed then
-                        starting_belt_name = belt.name
-                        starting_belt_speed = belt.speed
-                    end
-                end
-            end
-        end
-    end
-end
+local slowest_belt_name = liteception_util.get_slowest_craftable_belt_name(belt_names, data.raw["recipe"], false)
 
 -- Don't create research for starting belt.
 if starting_belt_name then
