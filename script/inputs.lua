@@ -4,8 +4,6 @@
 
 ]]
 
--- TODO: Sometimes you get extra resources? No clue what triggers it.
-
 local all_factory_data = require("static.all_factory_data")
 local liteception_util = require("script.liteception_util")
 
