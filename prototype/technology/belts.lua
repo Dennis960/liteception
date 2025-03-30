@@ -17,8 +17,8 @@ end
 local slowest_belt_name = liteception_util.get_slowest_craftable_belt_name(belt_names, data.raw["recipe"], false)
 
 -- Don't create research for starting belt.
-if starting_belt_name then
-    belt_names[starting_belt_name] = nil
+if slowest_belt_name then
+    belt_names[slowest_belt_name] = nil
 end
 
 
