@@ -30,9 +30,13 @@ local function get_position(is_indoor, name, direction, id, offset)
     }
 end
 
-function inputs.set_item_input(direction, id, input)
-    local indoor_surface = game.get_surface(storage.factory.surface_name)
-    local outdoor_surface = game.get_surface(storage.factory.placed_on_surface_name)
+function inputs.set_item_input(direction, id, input, surface_name)
+    local indoor_surface = game.get_surface(storage.factory[surface_name].surface_name)
+    local outdoor_surface = game.get_surface(storage.factory[surface_name].placed_on_surface_name)
+    if indoor_surface == nil or outdoor_surface == nil then
+        game.print("Error setting item input: surface is nil.")
+        return
+    end
 
     local belt_tier_name = storage.belt_tier_name
     local entity_direction = direction + 8
@@ -43,26 +47,30 @@ function inputs.set_item_input(direction, id, input)
     local outdoor_belt_position = get_position(false, "belt", direction, id, 0)
     local indoor_belt_position = get_position(true, "belt", direction, id, 0)
 
-    local infinity_chest = outdoor_surface.create_entity{
+    local infinity_chest = outdoor_surface.create_entity {
         name = "infinity-chest",
         position = chest_position,
         force = "player",
     }
-    local loader = outdoor_surface.create_entity{
+    if infinity_chest == nil then
+        game.print("Error setting item input: infinity chest is nil.")
+        return
+    end
+    local loader = outdoor_surface.create_entity {
         name = "liteception-loader",
         position = loader_position,
         force = "player",
         type = "output",
         direction = entity_direction,
     }
-    local outdoor_belt = outdoor_surface.create_entity{
+    local outdoor_belt = outdoor_surface.create_entity {
         name = belt_tier_name .. "transport-belt",
         position = outdoor_belt_position,
         direction = entity_direction,
         force = "player",
         raise_built = true,
     }
-    local indoor_belt = indoor_surface.create_entity{
+    local indoor_belt = indoor_surface.create_entity {
         name = belt_tier_name .. "transport-belt",
         position = indoor_belt_position,
         direction = entity_direction,
@@ -80,10 +88,15 @@ function inputs.set_item_input(direction, id, input)
     loader.force = "enemy"
     outdoor_belt.force = "enemy"
     indoor_belt.force = "enemy"
+    indoor_belt.destructible = false
 end
 
-function inputs.get_item_input(direction, id)
-    local outdoor_surface = game.get_surface(storage.factory.placed_on_surface_name)
+function inputs.get_item_input(direction, id, surface_name)
+    local outdoor_surface = game.get_surface(storage.factory[surface_name].placed_on_surface_name)
+    if outdoor_surface == nil then
+        game.print("Error getting item input: surface is nil.")
+        return nil
+    end
 
     local chest_position = get_position(false, "chest", direction, id, 0.5)
 
@@ -100,11 +113,15 @@ function inputs.get_item_input(direction, id)
     return nil
 end
 
-function inputs.set_fluid_input(direction, id, input)
+function inputs.set_fluid_input(direction, id, input, surface_name)
     local fluid_input = input:sub(1, input:find("-barrel") - 1)
 
-    local indoor_surface = game.get_surface(storage.factory.surface_name)
-    local outdoor_surface = game.get_surface(storage.factory.placed_on_surface_name)
+    local indoor_surface = game.get_surface(storage.factory[surface_name].surface_name)
+    local outdoor_surface = game.get_surface(storage.factory[surface_name].placed_on_surface_name)
+    if indoor_surface == nil or outdoor_surface == nil then
+        game.print("Error setting fluid input: surface is nil.")
+        return
+    end
 
     local entity_direction = direction + 8
     if entity_direction >= 16 then entity_direction = entity_direction - 16 end
@@ -114,17 +131,22 @@ function inputs.set_fluid_input(direction, id, input)
 
     local infinity_pipe_name = all_factory_data.infinity_pipes[direction]
 
-    local infinity_pipe = outdoor_surface.create_entity{
+    local infinity_pipe = outdoor_surface.create_entity {
         name = infinity_pipe_name,
         position = infinity_pipe_position,
         force = "player",
     }
-    local indoor_pipe = indoor_surface.create_entity{
+    if infinity_pipe == nil then
+        game.print("Error setting fluid input: infinity pipe is nil.")
+        return
+    end
+    local indoor_pipe = indoor_surface.create_entity {
         name = "pipe",
         position = indoor_pipe_position,
         force = "player",
         raise_built = true,
     }
+    indoor_pipe.destructible = false
 
     infinity_pipe.set_infinity_pipe_filter({
         name = fluid_input,
@@ -137,92 +159,59 @@ function inputs.set_fluid_input(direction, id, input)
     indoor_pipe.force = "enemy"
 end
 
-function inputs.change_input_amount(name, amount)
-    local input = storage.available_inputs[name]
-    if input and input.amount then
-        input.amount = input.amount + amount
-    else
-        storage.available_inputs[name] = {name = name, amount = 0}
+function inputs.remove_input(direction, id, surface_name)
+    local indoor_surface = game.get_surface(storage.factory[surface_name].surface_name)
+    local outdoor_surface = game.get_surface(storage.factory[surface_name].placed_on_surface_name)
+    if indoor_surface == nil or outdoor_surface == nil then
+        game.print("Error removing input: surface is nil.")
+        return
     end
-end
-
-function inputs.remove_input(direction, id)
-    local indoor_surface = game.get_surface(storage.factory.surface_name)
-    local outdoor_surface = game.get_surface(storage.factory.placed_on_surface_name)
 
     local chest_position = get_position(false, "chest", direction, id, 0.5)
     local outdoor_belt_position = get_position(false, "belt", direction, id, 0.5)
     local indoor_belt_position = get_position(true, "belt", direction, id, 0.5)
     local indoor_pipe_position = get_position(true, "pipe", direction, id, 0.5)
 
-    local infinity_pipe_name = all_factory_data.infinity_pipes[direction]
-
-    local outside = outdoor_surface.find_entities{ chest_position, outdoor_belt_position }
+    local outside = outdoor_surface.find_entities { chest_position, outdoor_belt_position }
     if outside[1] == nil then
-        outside = outdoor_surface.find_entities{ outdoor_belt_position, chest_position }
+        outside = outdoor_surface.find_entities { outdoor_belt_position, chest_position }
     end
-    local inside = indoor_surface.find_entities{ indoor_pipe_position, indoor_belt_position }
+    local inside = indoor_surface.find_entities { indoor_pipe_position, indoor_belt_position }
 
     for _, entity in pairs(outside) do
-        if entity.name == infinity_pipe_name then
-            local filter = entity.get_infinity_pipe_filter(1)
-            if filter ~= nil then
-                inputs.change_input_amount(filter.name .. "-barrel", 1)
-            end
-        elseif entity.name == "infinity-chest" then
-            local filter = entity.get_infinity_container_filter(1)
-            if filter ~= nil then
-                inputs.change_input_amount(filter.name, 1)
-            end
-        end
-        entity.destroy{ raise_destroy = true }
+        entity.destroy { raise_destroy = true }
     end
 
     for _, entity in pairs(inside) do
-        entity.destroy{ raise_destroy = true }
+        entity.destroy { raise_destroy = true }
     end
 end
 
-function inputs.set_input(direction, id, value)
-    storage.selected[direction][id] = value
+function inputs.set_input(direction, id, value, surface_name)
+    storage.selected[surface_name][direction][id] = value
 
-    inputs.remove_input(direction, id)
+    inputs.remove_input(direction, id, surface_name)
 
     if value ~= nil then
         if value:find("barrel") == nil then
-            inputs.set_item_input(direction, id, value)
-            inputs.change_input_amount(value, -1)
+            inputs.set_item_input(direction, id, value, surface_name)
         else
-            inputs.set_fluid_input(direction, id, value)
-            inputs.change_input_amount(value, -1)
+            inputs.set_fluid_input(direction, id, value, surface_name)
         end
     end
-end
-
-function inputs.add_factory_input(prototype)
-    local resource_name
-    if prototype.resource_category:find("fluid") ~= nil then
-        resource_name = prototype.name .. "-barrel"
-    else
-        resource_name = prototype.name
-    end
-
-    -- Don't duplicate resources
-    if storage.available_inputs[resource_name] ~= nil then
-        return
-    end
-
-    storage.available_inputs[resource_name] = { name = resource_name, amount = 1 }
 end
 
 local function replace_belts()
     for _, direction in ipairs(all_factory_data.directions) do
         for _, id in ipairs(storage.factory_data.gui_inputs[direction]) do
             if id ~= 0 then
-                local item = inputs.get_item_input(direction, id)
-                if item then
-                    inputs.remove_input(direction, id)
-                    inputs.set_input(direction, id, item)
+                for _, planet_name in pairs(all_factory_data.planet_names) do
+                    local surface_name = planet_name
+                    local item = inputs.get_item_input(direction, id, surface_name)
+                    if item then
+                        inputs.remove_input(direction, id, surface_name)
+                        inputs.set_input(direction, id, item, surface_name)
+                    end
                 end
             end
         end
@@ -230,24 +219,53 @@ local function replace_belts()
 end
 
 local function on_init()
-    storage.players = {}
+    storage.players = {
+        elements = {
+            main_frame = {}
+        },
+    }
     storage.used_items = {}
-    storage.available_inputs = {
-        ["water-barrel"] = { name = "water-barrel", amount = 1 },
-        ["wood"] = { name = "wood", amount = 1 },
+    storage.available_inputs = {}
+    storage.available_inputs["nauvis"] = {
+        ["wood"] = { name = "wood" },
+        ["coal"] = { name = "coal" },
+        ["stone"] = { name = "stone" },
+        ["iron-ore"] = { name = "iron-ore" },
+        ["copper-ore"] = { name = "copper-ore" },
+        ["uranium-ore"] = { name = "uranium-ore" },
+        ["water-barrel"] = { name = "water-barrel" },
+        ["crude-oil-barrel"] = { name = "crude-oil-barrel" },
+        ["raw-fish"] = { name = "raw-fish" },
+    }
+    storage.available_inputs["vulcanus"] = {
+        ["coal"] = { name = "coal" },
+        ["tungsten-ore"] = { name = "tungsten-ore" },
+        ["sulfuric-acid-barrel"] = { name = "sulfuric-acid-barrel" },
+        ["calcite"] = { name = "calcite" },
+        ["lava-barrel"] = { name = "lava-barrel" },
+    }
+    storage.available_inputs["gleba"] = {
+        ["yumako"] = { name = "yumako" },
+        ["jellynut"] = { name = "jellynut" },
+        ["water-barrel"] = { name = "water-barrel" },
+        ["wood"] = { name = "wood" },
+        ["stone"] = { name = "stone" },
+    }
+    storage.available_inputs["fulgora"] = {
+        ["scrap"] = { name = "scrap" },
+        ["heavy-oil-barrel"] = { name = "heavy-oil-barrel" },
+    }
+    storage.available_inputs["aquilo"] = {
+        ["fluorine-barrel"] = { name = "fluorine-barrel" },
+        ["lithium-brine-barrel"] = { name = "lithium-brine-barrel" },
+        ["crude-oil-barrel"] = { name = "crude-oil-barrel" },
     }
 
-    -- Find and add all resources to available_inputs.
-    local resources = prototypes.get_entity_filtered{{
-        filter = "type",
-        type = "resource",
-    }}
-    for _, prototype in pairs(resources) do
-        inputs.add_factory_input(prototype)
-    end
-
-    local belts = prototypes.get_entity_filtered{{ filter = "type", type = "transport-belt" }}
+    local belts = prototypes.get_entity_filtered { { filter = "type", type = "transport-belt" } }
     local slowest_belt_name = liteception_util.get_slowest_craftable_belt_name(belts, prototypes.recipe, true)
+    if slowest_belt_name == nil then
+        slowest_belt_name = "transport-belt"
+    end
 
     -- Trim "-transport-belt" off the belt name.
     local trimmed_belt_name = slowest_belt_name:sub(1, -16)
@@ -257,8 +275,11 @@ local function on_init()
     storage.belt_tier_name = trimmed_belt_name
 
     storage.selected = {}
-    for _, v in pairs(defines.direction) do
-        storage.selected[v] = {}
+    for _, planet_name in pairs(all_factory_data.planet_names) do
+        storage.selected[planet_name] = {}
+        for _, v in pairs(defines.direction) do
+            storage.selected[planet_name][v] = {}
+        end
     end
 end
 
@@ -284,9 +305,6 @@ local function on_research_finished(event)
             storage.belt_tier_name = belt_tier_name
             replace_belts()
         end
-    elseif event.research.name:find("factory%-extra%-") ~= nil then
-        local resource_name = event.research.name:sub(15, -3)
-        inputs.change_input_amount(resource_name, 1)
     end
 end
 

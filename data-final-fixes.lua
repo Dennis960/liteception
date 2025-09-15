@@ -1,1 +1,1 @@
-require("prototype.technology.resources")
+require("prototype.entity.space_connections_override")

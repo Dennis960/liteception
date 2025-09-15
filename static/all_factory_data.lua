@@ -4,10 +4,10 @@
 
 ]]
 
-local north = defines.direction.north
-local east  = defines.direction.east
-local south = defines.direction.south
-local west  = defines.direction.west
+local north        = defines.direction.north
+local east         = defines.direction.east
+local south        = defines.direction.south
+local west         = defines.direction.west
 
 local factory_data = {
     factories = {
@@ -22,6 +22,7 @@ local factory_data = {
         [south] = "vertical-infinity-pipe",
         [west]  = "horizontal-infinity-pipe",
     },
+    planet_names = { "nauvis", "fulgora", "vulcanus", "gleba", "aquilo" }
 }
 
 return factory_data
