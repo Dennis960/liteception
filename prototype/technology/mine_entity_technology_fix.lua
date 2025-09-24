@@ -18,36 +18,16 @@ local function table_contains(tbl, val)
     return false
 end
 
+local minable_entities = { "big-volcanic-rock", "iron-stromatolite", "copper-stromatolite", "fulgoran-ruin-vault" } -- These are the entities we can manually craft and place
+
 for _, tech in pairs(technologies) do
     local trigger = tech.research_trigger
-    if trigger ~= nil then
-        if trigger.type == "mine-entity" then
-            local minable_entities = { "big-volcanic-rock", "iron-stromatolite", "copper-stromatolite", "fulgoran-ruin-vault" } -- These are the entities we have placers for
-            if not table_contains(minable_entities, trigger.entity) then
-                tech.research_trigger = nil
-
-                local has_new_cost = false
-                for _, prerequisite_name in pairs(tech.prerequisites) do
-                    local prerequisite = technologies[prerequisite_name]
-                    if prerequisite.unit ~= nil then
-                        tech.unit = {
-                            count = 100,
-                            ingredients = prerequisite.unit.ingredients,
-                            time = prerequisite.unit.time,
-                        }
-                        has_new_cost = true
-                        break
-                    end
-                end
-
-                if not has_new_cost then
-                    tech.unit = {
-                        count = 100,
-                        ingredients = { { "automation-science-pack", 1 } },
-                        time = 15,
-                    }
-                end
-            end
-        end
+    if trigger ~= nil and trigger.type == "mine-entity" and not table_contains(minable_entities, trigger.entity) then
+        tech.research_trigger = nil
+        tech.unit = {
+            count = 100,
+            ingredients = { { "automation-science-pack", 1 } },
+            time = 15,
+        }
     end
 end
