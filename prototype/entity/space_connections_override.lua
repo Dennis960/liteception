@@ -16,6 +16,9 @@ end
 for _, planet_name in ipairs(all_factory_data.planet_names) do
     local planet = data.raw.planet[planet_name]
     local planet_copy = table.deepcopy(planet)
+    if planet_copy.name == "fulgora" then
+        planet_copy.lightning_properties = nil
+    end
     planet.distance = planet.distance + 5
     planet.orientation = planet.orientation + 0.25
     planet_copy.name = planet_name .. "-factory-floor"
@@ -27,9 +30,7 @@ for _, planet_name in ipairs(all_factory_data.planet_names) do
         if planet_name2 ~= planet_name then
             local connection_name = planet_name .. "-" .. planet_name2
             local connection = data.raw["space-connection"][connection_name]
-            if connection == nil then
-                log("No connection found between " .. planet_name .. " and " .. planet_name2)
-            else
+            if connection ~= nil then
                 local connection_copy = table.deepcopy(connection)
                 connection_copy.name = planet_name .. "-factory-floor-" .. planet_name2 .. "-factory-floor"
                 connection_copy.from = planet_name .. "-factory-floor"
