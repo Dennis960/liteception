@@ -12,7 +12,7 @@ local inputs = require("script.inputs")
 --- @param surface_name string
 local function create_buttons(player, surface_name)
     local selector_filter = {}
-    for _, item in pairs(storage.available_inputs[surface_name]) do
+    for _, item in pairs(inputs.available_inputs[surface_name]) do
         table.insert(selector_filter, { filter = "name", name = item.name })
     end
     if #selector_filter == 0 then

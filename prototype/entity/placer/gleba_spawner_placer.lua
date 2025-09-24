@@ -1,4 +1,4 @@
-local gleba_spawner = data.raw["unit-spawner"]["gleba-spawner"]
+local gleba_spawner = data.raw["unit-spawner"]["gleba-spawner-small"]
 gleba_spawner.collision_mask = {
     layers = {
         is_lower_object = true,
@@ -25,12 +25,12 @@ local gleba_spawner_placer = {
     order = "z[gleba-spawner-placer]",
     stack_size = 10,
     group = "production",
-    subgroup = "agriculture",
+    subgroup = "liteception-entity-placer",
     spoil_ticks = 60 * 60 * 30, -- 30 minutes
     spoil_to_trigger_result = pentapod_egg.spoil_to_trigger_result,
     fuel_category = "chemical",
     fuel_value = "20MJ",
-    place_result = "gleba-spawner",
+    place_result = "gleba-spawner-small",
     auto_recycle = true,
     localised_name = { "item-name.gleba-spawner-placer" },
     localised_description = { "item-description.gleba-spawner-placer" },
@@ -95,7 +95,7 @@ local gleba_spawner_placer_technology = {
     research_trigger = {
         item = "nutrients",
         type = "craft-item",
-        count = 100,
+        count = 1,
     },
 }
 

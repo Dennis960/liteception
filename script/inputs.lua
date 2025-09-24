@@ -7,7 +7,44 @@
 local all_factory_data = require("static.all_factory_data")
 local liteception_util = require("script.liteception_util")
 
-local inputs = {}
+local inputs = {
+    available_inputs = {
+        nauvis = {
+            { name = "wood" },
+            { name = "coal" },
+            { name = "stone" },
+            { name = "iron-ore" },
+            { name = "copper-ore" },
+            { name = "uranium-ore" },
+            { name = "water-barrel" },
+            { name = "crude-oil-barrel" },
+            { name = "raw-fish" },
+        },
+        vulcanus = {
+            { name = "coal" },
+            { name = "tungsten-ore" },
+            { name = "sulfuric-acid-barrel" },
+            { name = "calcite" },
+            { name = "lava-barrel" },
+        },
+        gleba = {
+            { name = "yumako" },
+            { name = "jellynut" },
+            { name = "water-barrel" },
+            { name = "wood" },
+            { name = "stone" },
+        },
+        fulgora = {
+            { name = "scrap" },
+            { name = "heavy-oil-barrel" },
+        },
+        aquilo = {
+            { name = "fluorine-barrel" },
+            { name = "lithium-brine-barrel" },
+            { name = "crude-oil-barrel" },
+        },
+    }
+}
 
 local function get_position(is_indoor, name, direction, id, offset)
     local surface_position_data = is_indoor and storage.factory_data.indoor_pos or storage.factory_data.outdoor_pos
@@ -223,42 +260,6 @@ local function on_init()
         elements = {
             main_frame = {}
         },
-    }
-    storage.used_items = {}
-    storage.available_inputs = {}
-    storage.available_inputs["nauvis"] = {
-        ["wood"] = { name = "wood" },
-        ["coal"] = { name = "coal" },
-        ["stone"] = { name = "stone" },
-        ["iron-ore"] = { name = "iron-ore" },
-        ["copper-ore"] = { name = "copper-ore" },
-        ["uranium-ore"] = { name = "uranium-ore" },
-        ["water-barrel"] = { name = "water-barrel" },
-        ["crude-oil-barrel"] = { name = "crude-oil-barrel" },
-        ["raw-fish"] = { name = "raw-fish" },
-    }
-    storage.available_inputs["vulcanus"] = {
-        ["coal"] = { name = "coal" },
-        ["tungsten-ore"] = { name = "tungsten-ore" },
-        ["sulfuric-acid-barrel"] = { name = "sulfuric-acid-barrel" },
-        ["calcite"] = { name = "calcite" },
-        ["lava-barrel"] = { name = "lava-barrel" },
-    }
-    storage.available_inputs["gleba"] = {
-        ["yumako"] = { name = "yumako" },
-        ["jellynut"] = { name = "jellynut" },
-        ["water-barrel"] = { name = "water-barrel" },
-        ["wood"] = { name = "wood" },
-        ["stone"] = { name = "stone" },
-    }
-    storage.available_inputs["fulgora"] = {
-        ["scrap"] = { name = "scrap" },
-        ["heavy-oil-barrel"] = { name = "heavy-oil-barrel" },
-    }
-    storage.available_inputs["aquilo"] = {
-        ["fluorine-barrel"] = { name = "fluorine-barrel" },
-        ["lithium-brine-barrel"] = { name = "lithium-brine-barrel" },
-        ["crude-oil-barrel"] = { name = "crude-oil-barrel" },
     }
 
     local belts = prototypes.get_entity_filtered { { filter = "type", type = "transport-belt" } }
