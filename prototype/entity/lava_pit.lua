@@ -5,14 +5,16 @@ lava_pit_entity.name = "liteception-lava-pit"
 lava_pit_entity.icon = "__liteception__/graphics/entity/lava_pit/lava-pit.png"
 lava_pit_entity.icon_size = 64
 lava_pit_entity.minable = { mining_time = 0.5 }
-lava_pit_entity.picture.layers[1] = {
-    filename = "__liteception__/graphics/entity/lava_pit/lava-pit.png",
-    width = 64,
-    height = 64,
-    shift = { 0, 0 },
-    scale = 0.5,
+lava_pit_entity.picture.layers = {
+    {
+        filename = "__liteception__/graphics/entity/lava_pit/lava-pit.png",
+        width = 64,
+        height = 64,
+        shift = { 0, 0 },
+        scale = 0.5,
+    }
 }
-
+lava_pit_entity.hit_visualization_box = nil
 lava_pit_entity.quality_affects_inventory_size = false
 lava_pit_entity.surface_conditions = {
     {
